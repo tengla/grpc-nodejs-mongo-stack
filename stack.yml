@@ -17,8 +17,8 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
 
-  mongo-app:
-    image: mongo-app
+  grpc-server:
+    image: grpc-server
     ports:
       - 30043:30043
     environment:
