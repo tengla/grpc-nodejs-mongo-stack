@@ -4,7 +4,7 @@ const protoLoader = require("@grpc/proto-loader");
 const connect = require('./db');
 
 const host = process.env.GRPC_HOST || 'localhost';
-const port = process.env.GRPC_PORT || '30043';
+const port = process.env.GRPC_PORT || 30043;
 
 const packageDefinition = protoLoader.loadSync('./protos/people.proto', {
   keepCase: true,
