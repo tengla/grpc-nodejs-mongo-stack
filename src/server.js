@@ -3,6 +3,9 @@ const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const connect = require('./db');
 
+const host = process.env.GRPC_HOST || 'localhost';
+const port = process.env.GRPC_PORT || '30043';
+
 const packageDefinition = protoLoader.loadSync('./protos/people.proto', {
   keepCase: true,
   longs: String,
@@ -33,14 +36,14 @@ module.exports = async () => {
     }
   });
 
-  await server.bindAsync("127.0.0.1:30043",
+  await server.bindAsync(`${host}:${port}`,
     grpc.ServerCredentials.createInsecure(),
-    (err, port) => {
+    (err) => {
       if (err) {
         console.log(err);
         return;
       }
-      console.log(`Server running at http://127.0.0.1:${port}`);
+      console.log(`gRPC server now running at http://${host}:${port}`);
       server.start();
     });
 };

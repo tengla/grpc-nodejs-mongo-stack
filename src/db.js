@@ -9,7 +9,9 @@ const Person = mongo.model('Person', new mongo.Schema({
 }));
 
 module.exports = async () => {
-  await mongo.connect(`mongodb://${host}:27017/test`, {
+  const url = `mongodb://${host}:27017/test`;
+  console.log('Connecting to mongodb', url);
+  await mongo.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     auth: {
