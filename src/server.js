@@ -36,7 +36,7 @@ module.exports = async () => {
     }
   });
 
-  await server.bindAsync(`${host}:${port}`,
+  server.bindAsync(`${host}:${port}`,
     grpc.ServerCredentials.createInsecure(),
     (err) => {
       if (err) {
