@@ -24,3 +24,5 @@ When you're done:
 ```
 docker stack rm grpc-test
 ```
+
+For more info about Node.js and gRPC, refer to https://blog.logrocket.com/creating-a-crud-api-with-node-express-and-grpc/
