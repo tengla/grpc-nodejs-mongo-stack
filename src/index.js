@@ -3,5 +3,9 @@ require('dotenv').config();
 const serve = require('./server');
 
 (async () => {
-  await serve();
+  try {
+    await serve();
+  } catch (err) {
+    console.error(err);
+  }
 })();
