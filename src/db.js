@@ -1,8 +1,8 @@
 const mongo = require('mongoose');
 
-const host = process.env.MONGO_HOST || 'localhost';
-const user = process.env.MONGO_USER || 'mongoadmin';
-const password = process.env.MONGO_PASSWORD || 'secret';
+const host = process.env.MONGO_HOST;
+const user = process.env.MONGO_USER;
+const password = process.env.MONGO_PASSWORD;
 
 const Person = mongo.model('Person', new mongo.Schema({
   name: 'string', age: 'number'
