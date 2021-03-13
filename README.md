@@ -1,4 +1,4 @@
-# gRPC on Node.js and MongoDB
+# gRPC with Node.js, golang and MongoDB
 
 To run project:
 
