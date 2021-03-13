@@ -6,7 +6,7 @@ const connect = require('./db');
 const host = process.env.GRPC_HOST;
 const port = process.env.GRPC_PORT;
 
-const packageDefinition = protoLoader.loadSync('./protos/people.proto', {
+const packageDefinition = protoLoader.loadSync('../protos/people.proto', {
   keepCase: true,
   longs: String,
   enums: String,
