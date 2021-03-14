@@ -1,5 +1,5 @@
 
-srcdir = ../protos
+srcdir = ../server/protos
 dstdir = ./people
 
 protoc:
@@ -13,6 +13,9 @@ protoc:
 
 build:
 	go build -o dist/client main.go
+
+run:
+	go run main.go -server_addr localhost:30043
 
 clean:
 	rm -rf dist
