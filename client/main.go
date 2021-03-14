@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
+	"time"
 
+	"github.com/tengla/grpc-nodejs-mongo-stack/client/people"
 	"google.golang.org/grpc"
 )
 
@@ -24,7 +27,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
-	people.GetPeople()
-	log.Printf("conn: %v", conn)
 	defer conn.Close()
+
+	client := people.NewPeopleServiceClient(conn)
+	log.Printf("client: %v", client)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	people, err := client.GetAll(ctx, &people.Empty{})
+	if err != nil {
+		log.Fatalf("Failed to get all, %v", err)
+	}
+	log.Printf("people: %v", people)
 }
