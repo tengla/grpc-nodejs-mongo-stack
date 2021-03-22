@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"log"
 	"time"
@@ -11,17 +12,28 @@ import (
 )
 
 var (
-	serverAddr = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
+	serverAddr   = flag.String("server_addr", "localhost:10000", "The server address in the format of host:port")
+	insertPerson = flag.String("insert", "", "Insert a person")
+	deletePerson = flag.String("delete", "", "Delete a person by id")
 )
+
+type InsertPerson struct {
+	Name string
+	Age  int64
+}
 
 func main() {
 
 	flag.Parse()
+
+	var pax InsertPerson
+	json.Unmarshal([]byte(*insertPerson), &pax)
+
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithInsecure())
 	opts = append(opts, grpc.WithBlock())
 
-	log.Printf("Attempting %v", *serverAddr)
+	log.Printf("Attempting connect to %v", *serverAddr)
 
 	conn, err := grpc.Dial(*serverAddr, opts...)
 	if err != nil {
@@ -30,12 +42,40 @@ func main() {
 	defer conn.Close()
 
 	client := people.NewPeopleServiceClient(conn)
-	log.Printf("client: %v", client)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
+	log.Println("")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	people, err := client.GetAll(ctx, &people.Empty{})
-	if err != nil {
-		log.Fatalf("Failed to get all, %v", err)
+
+	if len(*deletePerson) > 0 {
+		log.Printf("Delete %s", *deletePerson)
+		var id = &people.PersonId{
+			Id: *deletePerson,
+		}
+		res, err := client.Remove(ctx, id)
+		if err != nil {
+			log.Fatalf("Failed to delete, %v", err)
+		}
+		log.Printf("%v", res)
+	} else if len(pax.Name) > 0 {
+		log.Printf("Insert %s %d", pax.Name, pax.Age)
+		var p = &people.Person{
+			Name: pax.Name,
+			Age:  int32(pax.Age),
+		}
+		res, err := client.Insert(ctx, p)
+		if err != nil {
+			log.Fatalf("Failed to insert, %v", err)
+		}
+		log.Printf("%v", res)
+	} else {
+		people, err := client.GetAll(ctx, &people.Empty{})
+		if err != nil {
+			log.Fatalf("Failed to get all, %v", err)
+		}
+		for _, person := range people.People {
+			log.Printf("Person: %s, %s, %d", person.Id, person.Name, person.Age)
+		}
 	}
-	log.Printf("people: %v", people)
 }
