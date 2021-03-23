@@ -19,7 +19,7 @@ var (
 
 type InsertPerson struct {
 	Name string
-	Age  int64
+	Age  int32
 }
 
 func main() {
@@ -65,7 +65,7 @@ func main() {
 		log.Printf("Insert %s %d", pax.Name, pax.Age)
 		var p = &people.Person{
 			Name: pax.Name,
-			Age:  int32(pax.Age),
+			Age:  pax.Age,
 		}
 		res, err := client.Insert(ctx, p)
 		if err != nil {
