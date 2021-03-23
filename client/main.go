@@ -49,16 +49,19 @@ func main() {
 	defer cancel()
 
 	if len(*deletePerson) > 0 {
+
 		log.Printf("Delete %s", *deletePerson)
-		var id = &people.PersonId{
+
+		res, err := client.Remove(ctx, &people.PersonId{
 			Id: *deletePerson,
-		}
-		res, err := client.Remove(ctx, id)
+		})
+
 		if err != nil {
 			log.Fatalf("Failed to delete, %v", err)
 		}
 		log.Printf("%v", res)
 	} else if len(pax.Name) > 0 {
+
 		log.Printf("Insert %s %d", pax.Name, pax.Age)
 		var p = &people.Person{
 			Name: pax.Name,
@@ -70,12 +73,14 @@ func main() {
 		}
 		log.Printf("%v", res)
 	} else {
+
 		people, err := client.GetAll(ctx, &people.Empty{})
 		if err != nil {
 			log.Fatalf("Failed to get all, %v", err)
 		}
 		for _, person := range people.People {
-			log.Printf("Person: %s, %s, %d", person.Id, person.Name, person.Age)
+			log.Printf("Person { Id = '%s', Name = '%s', Age = %d }",
+				person.Id, person.Name, person.Age)
 		}
 	}
 }
